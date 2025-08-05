@@ -1,4 +1,4 @@
-from react_agent.configuration import Configuration
+from video_researcher.configuration import Configuration
 
 
 def test_configuration_empty() -> None:

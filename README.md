@@ -1,26 +1,37 @@
-# LangGraph ReAct Agent Template
+# Video Researcher Agent
 
 [![CI](https://github.com/langchain-ai/react-agent/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/langchain-ai/react-agent/actions/workflows/unit-tests.yml)
 [![Integration Tests](https://github.com/langchain-ai/react-agent/actions/workflows/integration-tests.yml/badge.svg)](https://github.com/langchain-ai/react-agent/actions/workflows/integration-tests.yml)
 [![Open in - LangGraph Studio](https://img.shields.io/badge/Open_in-LangGraph_Studio-00324d.svg?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NS4zMzMiIGhlaWdodD0iODUuMzMzIiB2ZXJzaW9uPSIxLjAiIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTEzIDcuOGMtNi4zIDMuMS03LjEgNi4zLTYuOCAyNS43LjQgMjQuNi4zIDI0LjUgMjUuOSAyNC41QzU3LjUgNTggNTggNTcuNSA1OCAzMi4zIDU4IDcuMyA1Ni43IDYgMzIgNmMtMTIuOCAwLTE2LjEuMy0xOSAxLjhtMzcuNiAxNi42YzIuOCAyLjggMy40IDQuMiAzLjQgNy42cy0uNiA0LjgtMy40IDcuNkw0Ny4yIDQzSDE2LjhsLTMuNC0zLjRjLTQuOC00LjgtNC44LTEwLjQgMC0xNS4ybDMuNC0zLjRoMzAuNHoiLz48cGF0aCBkPSJNMTguOSAyNS42Yy0xLjEgMS4zLTEgMS43LjQgMi41LjkuNiAxLjcgMS44IDEuNyAyLjcgMCAxIC43IDIuOCAxLjYgNC4xIDEuNCAxLjkgMS40IDIuNS4zIDMuMi0xIC42LS42LjkgMS40LjkgMS41IDAgMi43LS41IDIuNy0xIDAtLjYgMS4xLS44IDIuNi0uNGwyLjYuNy0xLjgtMi45Yy01LjktOS4zLTkuNC0xMi4zLTExLjUtOS44TTM5IDI2YzAgMS4xLS45IDIuNS0yIDMuMi0yLjQgMS41LTIuNiAzLjQtLjUgNC4yLjguMyAyIDEuNyAyLjUgMy4xLjYgMS41IDEuNCAyLjMgMiAyIDEuNS0uOSAxLjItMy41LS40LTMuNS0yLjEgMC0yLjgtMi44LS44LTMuMyAxLjYtLjQgMS42LS41IDAtLjYtMS4xLS4xLTEuNS0uNi0xLjItMS42LjctMS43IDMuMy0yLjEgMy41LS41LjEuNS4yIDEuNi4zIDIuMiAwIC43LjkgMS40IDEuOSAxLjYgMi4xLjQgMi4zLTIuMy4yLTMuMi0uOC0uMy0yLTEuNy0yLjUtMy4xLTEuMS0zLTMtMy4zLTMtLjUiLz48L3N2Zz4=)](https://langgraph-studio.vercel.app/templates/open?githubUrl=https://github.com/langchain-ai/react-agent)
 
-This template showcases a [ReAct agent](https://arxiv.org/abs/2210.03629) implemented using [LangGraph](https://github.com/langchain-ai/langgraph), designed for [LangGraph Studio](https://github.com/langchain-ai/langgraph-studio). ReAct agents are uncomplicated, prototypical agents that can be flexibly extended to many tools.
+A specialized [ReAct agent](https://arxiv.org/abs/2210.03629) for video content research, built with [LangGraph](https://github.com/langchain-ai/langgraph) and designed for [LangGraph Studio](https://github.com/langchain-ai/langgraph-studio). This agent helps users find, analyze, and gather information about videos, video content, video platforms, and video-related topics.
 
 ![Graph view in LangGraph studio UI](./static/studio_ui.png)
 
-The core logic, defined in `src/react_agent/graph.py`, demonstrates a flexible ReAct agent that iteratively reasons about user queries and executes actions, showcasing the power of this approach for complex problem-solving tasks.
+The core logic, defined in `src/video_researcher/graph.py`, demonstrates a flexible ReAct agent that iteratively reasons about user queries and executes actions, showcasing the power of this approach for complex problem-solving tasks.
 
 ## What it does
 
-The ReAct agent:
+The Video Researcher agent specializes in:
 
-1. Takes a user **query** as input
-2. Reasons about the query and decides on an action
-3. Executes the chosen action using available tools
-4. Observes the result of the action
-5. Repeats steps 2-4 until it can provide a final answer
+1. **Video Platform Analysis**: Research hashtags, trends, and content on TikTok and other video platforms
+2. **Content Discovery**: Find videos based on topics, hashtags, or creators
+3. **Engagement Analysis**: Analyze video performance metrics (views, likes, shares, comments)
+4. **Web Research**: General web search for video-related topics and current events
+5. **Data Aggregation**: Compile comprehensive reports on video content and trends
 
-By default, it's set up with a basic set of tools, but can be easily extended with custom tools to suit various use cases.
+### Available Tools
+
+- **TikTok Hashtag Search** (`tiktok_hashtag_search`) - Get detailed hashtag analytics and challenge IDs
+- **TikTok Hashtag Posts** (`tiktok_hashtag_posts`) - Fetch videos from hashtags with automatic pagination
+- **Web Search** (`tavily_search`) - General web search for video-related research
+
+### Workflow Example
+
+1. Takes a user **query** about video content (e.g., "Research #dog videos on TikTok")
+2. Uses appropriate tools to gather data (hashtag info, video posts, web research)  
+3. Analyzes the results and compiles insights
+4. Provides comprehensive findings with metrics, trends, and actionable data
 
 ## Getting Started
 
@@ -34,7 +45,16 @@ cp .env.example .env
 
 2. Define required API keys in your `.env` file.
 
-The primary [search tool](./src/react_agent/tools.py) [^1] used is [Tavily](https://tavily.com/). Create an API key [here](https://app.tavily.com/sign-in).
+**Required API Keys:**
+- **Tavily API Key**: For web search capabilities - [Get API key](https://app.tavily.com/sign-in)
+- **RapidAPI Key**: For TikTok tools - [Get API key](https://rapidapi.com/hub)
+
+```bash
+# Add to your .env file
+TAVILY_API_KEY=your_tavily_key_here
+RAPIDAPI_KEY=your_rapidapi_key_here
+ANTHROPIC_API_KEY=your_anthropic_key_here  # or OpenAI key
+```
 
 <!--
 Setup instruction auto-generated by `langgraph template lock`. DO NOT EDIT MANUALLY.
@@ -82,20 +102,143 @@ End setup instructions
 3. Customize whatever you'd like in the code.
 4. Open the folder LangGraph Studio!
 
-## How to customize
+## Architecture & Folder Structure
 
-1. **Add new tools**: Extend the agent's capabilities by adding new tools in [tools.py](./src/react_agent/tools.py). These can be any Python functions that perform specific tasks.
-2. **Select a different model**: We default to Anthropic's Claude 3 Sonnet. You can select a compatible chat model using `provider/model-name` via configuration. Example: `openai/gpt-4-turbo-preview`.
-3. **Customize the prompt**: We provide a default system prompt in [prompts.py](./src/react_agent/prompts.py). You can easily update this via configuration in the studio.
+The project follows a clean, modular architecture designed for extensibility:
 
-You can also quickly extend this template by:
+```
+src/
+├── clients/                    # API client libraries
+│   ├── base.py                # Base API client with async HTTP handling
+│   └── tiktok/                # TikTok API integration
+│       ├── __init__.py
+│       ├── client.py          # Main TikTok API client
+│       ├── models.py          # Pydantic models for API responses
+│       ├── endpoints.py       # API endpoint constants
+│       └── utils.py           # Shared formatting utilities
+└── video_researcher/          # Main agent package
+    ├── tools/                 # Tool implementations
+    │   ├── __init__.py        # TOOLS list and exports
+    │   ├── tiktok_tools.py    # TikTok research tools
+    │   └── tavily_tools.py    # Web search tools
+    ├── configuration.py       # Agent configuration
+    ├── graph.py              # LangGraph workflow definition
+    ├── prompts.py            # System prompts
+    ├── state.py              # Agent state management
+    └── utils.py              # Agent utilities
+```
 
-- Modifying the agent's reasoning process in [graph.py](./src/react_agent/graph.py).
-- Adjusting the ReAct loop or adding additional steps to the agent's decision-making process.
+## Adding New Tools
+
+### 1. Create API Client (if needed)
+
+For new platforms, create a client in `src/clients/`:
+
+```python
+# src/clients/youtube/client.py
+from ..base import BaseAPIClient
+
+class YouTubeClient(BaseAPIClient):
+    def _get_default_headers(self):
+        return {"Authorization": f"Bearer {self.api_key}"}
+    
+    async def get_video_info(self, video_id: str):
+        # Implementation here
+        pass
+```
+
+### 2. Add Tool Functions
+
+Create tool functions in `src/video_researcher/tools/`:
+
+```python
+# src/video_researcher/tools/youtube_tools.py
+from clients.youtube import YouTubeClient
+
+async def youtube_video_search(query: str, max_results: int = 10):
+    """
+    Search for YouTube videos.
+    
+    Args:
+        query: Search query string
+        max_results: Maximum number of results to return
+    """
+    # Tool implementation
+    pass
+```
+
+### 3. Register Tools
+
+Add your tools to `src/video_researcher/tools/__init__.py`:
+
+```python
+from .youtube_tools import youtube_video_search
+
+TOOLS: List[Callable[..., Any]] = [
+    tavily_search,
+    tiktok_hashtag_search,
+    tiktok_hashtag_posts,
+    youtube_video_search,  # Add your new tool
+]
+```
+
+### 4. Design Principles
+
+- **Consistent Return Format**: All tools return `Dict[str, Any]` with `success` field
+- **Error Handling**: Always handle API failures gracefully
+- **Formatted Data**: Provide both raw numbers and human-readable formats
+- **Comprehensive Info**: Include URLs, metadata, and actionable data
+- **Pagination Support**: Handle large datasets with cursor-based pagination
+
+### 5. Tool Function Template
+
+```python
+async def my_platform_tool(param1: str, param2: int = 10) -> Dict[str, Any]:
+    """
+    Brief description of what this tool does.
+    
+    Args:
+        param1: Description of parameter
+        param2: Description with default value
+    """
+    api_key = os.getenv("MY_PLATFORM_API_KEY")
+    if not api_key:
+        return {"error": "API key not set", "success": False}
+    
+    try:
+        async with MyPlatformClient(api_key=api_key) as client:
+            data = await client.fetch_data(param1, param2)
+            
+            if not data:
+                return {
+                    "error": f"No data found for {param1}",
+                    "success": False
+                }
+            
+            return {
+                "success": True,
+                "param1": param1,
+                "results": data,  # Formatted data
+                "message": f"Successfully fetched {len(data)} items"
+            }
+            
+    except Exception as e:
+        return {
+            "error": f"Tool failed: {str(e)}",
+            "success": False
+        }
+```
+
+## Customization Options
+
+1. **Select a different model**: We default to Anthropic's Claude 3 Sonnet. You can select a compatible chat model using `provider/model-name` via configuration. Example: `openai/gpt-4-turbo-preview`.
+2. **Customize the prompt**: We provide a default system prompt in [prompts.py](./src/video_researcher/prompts.py). You can easily update this via configuration in the studio.
+3. **Modify agent workflow**: Update the reasoning process in [graph.py](./src/video_researcher/graph.py)
+4. **Add new API integrations**: Follow the client pattern in `src/clients/`
 
 ## Development
 
-While iterating on your graph, you can edit past state and rerun your app from past states to debug specific nodes. Local changes will be automatically applied via hot reload. Try adding an interrupt before the agent calls tools, updating the default system message in `src/react_agent/configuration.py` to take on a persona, or adding additional nodes and edges!
+While iterating on your graph, you can edit past state and rerun your app from past states to debug specific nodes. Local changes will be automatically applied via hot reload. Try adding an interrupt before the agent calls tools, updating the default system message in `src/video_researcher/configuration.py` to take on a persona, or adding additional nodes and edges!
 
 Follow up requests will be appended to the same thread. You can create an entirely new thread, clearing previous history, using the `+` button in the top right.
 

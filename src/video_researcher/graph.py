@@ -10,10 +10,10 @@ from langchain_core.messages import AIMessage
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 
-from react_agent.configuration import Configuration
-from react_agent.state import InputState, State
-from react_agent.tools import TOOLS
-from react_agent.utils import load_chat_model
+from video_researcher.configuration import Configuration
+from video_researcher.state import InputState, State
+from video_researcher.tools import TOOLS
+from video_researcher.utils import load_chat_model
 
 # Define the function that calls the model
 
