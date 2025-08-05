@@ -1,0 +1,1 @@
+"""Common shared functionality for all agents."""

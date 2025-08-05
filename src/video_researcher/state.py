@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Sequence
+from typing import List, Sequence
 
 from langchain_core.messages import AnyMessage
 from langgraph.graph import add_messages
 from langgraph.managed import IsLastStep
 from typing_extensions import Annotated
+
+from common.task_management import Task
 
 
 @dataclass
@@ -51,6 +53,15 @@ class State(InputState):
 
     This is a 'managed' variable, controlled by the state machine rather than user code.
     It is set to 'True' when the step count reaches recursion_limit - 1.
+    """
+
+    # Task management for organizing and tracking work throughout the conversation
+    tasks: List[Task] = field(default_factory=list)
+    """
+    Task items for work organization and progress tracking.
+    
+    This allows the agent to maintain a persistent task list across tool calls
+    and conversation turns, enabling better work organization and completion tracking.
     """
 
     # Additional attributes can be added here as needed.

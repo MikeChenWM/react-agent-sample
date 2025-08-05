@@ -18,20 +18,24 @@ The Video Researcher agent specializes in:
 2. **Content Discovery**: Find videos based on topics, hashtags, or creators
 3. **Engagement Analysis**: Analyze video performance metrics (views, likes, shares, comments)
 4. **Web Research**: General web search for video-related topics and current events
-5. **Data Aggregation**: Compile comprehensive reports on video content and trends
+5. **Task Management**: Organize complex multi-step research with built-in task tracking
+6. **Data Aggregation**: Compile comprehensive reports on video content and trends
 
 ### Available Tools
 
 - **TikTok Hashtag Search** (`tiktok_hashtag_search`) - Get detailed hashtag analytics and challenge IDs
 - **TikTok Hashtag Posts** (`tiktok_hashtag_posts`) - Fetch videos from hashtags with automatic pagination
 - **Web Search** (`tavily_search`) - General web search for video-related research
+- **Task Manager** (`task_manager`) - Organize and track complex multi-step research tasks
 
 ### Workflow Example
 
 1. Takes a user **query** about video content (e.g., "Research #dog videos on TikTok")
-2. Uses appropriate tools to gather data (hashtag info, video posts, web research)  
-3. Analyzes the results and compiles insights
-4. Provides comprehensive findings with metrics, trends, and actionable data
+2. **Creates tasks** to organize complex research (hashtag analysis, content review, trend identification)
+3. Uses appropriate tools to gather data (hashtag info, video posts, web research)  
+4. **Tracks progress** and updates task completion status throughout the research
+5. Analyzes the results and compiles insights
+6. Provides comprehensive findings with metrics, trends, and actionable data
 
 ## Getting Started
 
@@ -104,7 +108,7 @@ End setup instructions
 
 ## Architecture & Folder Structure
 
-The project follows a clean, modular architecture designed for extensibility:
+The project follows a clean, modular architecture designed for extensibility and reusability:
 
 ```
 src/
@@ -116,17 +120,35 @@ src/
 │       ├── models.py          # Pydantic models for API responses
 │       ├── endpoints.py       # API endpoint constants
 │       └── utils.py           # Shared formatting utilities
+├── common/                    # Shared functionality across agents
+│   └── task_management/       # Task organization and tracking
+│       ├── __init__.py
+│       ├── models.py          # Task, TaskStatus, TaskPriority models
+│       └── manager.py         # TaskManager core logic
 └── video_researcher/          # Main agent package
     ├── tools/                 # Tool implementations
     │   ├── __init__.py        # TOOLS list and exports
     │   ├── tiktok_tools.py    # TikTok research tools
-    │   └── tavily_tools.py    # Web search tools
+    │   ├── tavily_tools.py    # Web search tools
+    │   └── task_tools.py      # Task management wrapper
     ├── configuration.py       # Agent configuration
     ├── graph.py              # LangGraph workflow definition
-    ├── prompts.py            # System prompts
-    ├── state.py              # Agent state management
+    ├── prompts.py            # System prompts with task guidance
+    ├── state.py              # Agent state with task tracking
     └── utils.py              # Agent utilities
 ```
+
+### Architecture Principles
+
+**Layered Design:**
+- **`clients/`** - External API integrations (TikTok, future platforms)
+- **`common/`** - Shared functionality usable by any agent
+- **`video_researcher/`** - Agent-specific logic and tool wrappers
+
+**Clean Separation:**
+- Core functionality in `common/` (e.g., TaskManager)
+- Agent-specific wrappers in `tools/` (e.g., task_tools.py)
+- State management integrates seamlessly with shared components
 
 ## Adding New Tools
 
@@ -178,19 +200,45 @@ TOOLS: List[Callable[..., Any]] = [
     tavily_search,
     tiktok_hashtag_search,
     tiktok_hashtag_posts,
+    task_manager,
     youtube_video_search,  # Add your new tool
 ]
 ```
 
-### 4. Design Principles
+### 4. Adding Common Shared Tools
+
+For functionality that multiple agents could use, create it in `common/`:
+
+```python
+# 1. Create models in src/common/your_feature/models.py
+from pydantic import BaseModel
+
+class YourModel(BaseModel):
+    # Define your data structures
+
+# 2. Create manager in src/common/your_feature/manager.py  
+class YourManager:
+    @staticmethod
+    def operation(state: Dict[str, Any], params) -> Dict[str, Any]:
+        # Core business logic here
+
+# 3. Create agent wrapper in src/video_researcher/tools/your_tools.py
+from common.your_feature import YourManager
+
+def your_tool(state: Dict[str, Any], params) -> Dict[str, Any]:
+    return YourManager.operation(state, params)
+```
+
+### 5. Design Principles
 
 - **Consistent Return Format**: All tools return `Dict[str, Any]` with `success` field
 - **Error Handling**: Always handle API failures gracefully
 - **Formatted Data**: Provide both raw numbers and human-readable formats
 - **Comprehensive Info**: Include URLs, metadata, and actionable data
 - **Pagination Support**: Handle large datasets with cursor-based pagination
+- **Shared vs Agent-Specific**: Core logic in `common/`, agent wrappers in `tools/`
 
-### 5. Tool Function Template
+### 6. Tool Function Template
 
 ```python
 async def my_platform_tool(param1: str, param2: int = 10) -> Dict[str, Any]:
