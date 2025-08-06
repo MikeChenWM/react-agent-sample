@@ -41,6 +41,8 @@ class HashtagInfo(BaseModel):
     cover: str = ""
 
     class Config:
+        """Pydantic configuration."""
+
         populate_by_name = True
 
     @property
@@ -154,6 +156,8 @@ class HashtagPostsData(BaseModel):
     hasMore: bool = False
 
     class Config:
+        """Pydantic configuration."""
+
         populate_by_name = True
 
 

@@ -20,6 +20,7 @@ class BaseAPIClient(ABC):
     """Base class for all API clients."""
 
     def __init__(self, api_key: str, base_url: str, timeout: float = 30.0):
+        """Initialize API client with key, base URL and timeout."""
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
@@ -81,7 +82,9 @@ class BaseAPIClient(ABC):
             self._client = None
 
     async def __aenter__(self):
+        """Async context manager entry."""
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Async context manager exit."""
         await self.close()

@@ -16,6 +16,7 @@ class TikTokClient(BaseAPIClient):
     """TikTok API client for scraping TikTok data."""
 
     def __init__(self, api_key: str, timeout: float = 30.0):
+        """Initialize TikTok client with API key and timeout."""
         super().__init__(api_key=api_key, base_url=BASE_URL, timeout=timeout)
 
     def _get_default_headers(self) -> Dict[str, str]:
