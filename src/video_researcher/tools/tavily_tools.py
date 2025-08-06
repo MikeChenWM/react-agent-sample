@@ -13,7 +13,7 @@ async def tavily_search(query: str) -> Optional[dict[str, Any]]:
     This function performs a search using the Tavily search engine, which is designed
     to provide comprehensive, accurate, and trusted results. It's particularly useful
     for answering questions about current events.
-    
+
     Args:
         query: The search query string
     """

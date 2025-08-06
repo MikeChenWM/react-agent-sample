@@ -9,8 +9,8 @@ from .utils import format_count, format_tiktok_url
 
 class PaginatedResult(BaseModel):
     """Result with pagination info."""
-    
-    videos: List['VideoInfo'] = []
+
+    videos: List["VideoInfo"] = []
     cursor: int = 0
     has_more: bool = False
     total_fetched: int = 0
@@ -18,7 +18,7 @@ class PaginatedResult(BaseModel):
 
 class TikTokAPIResponse(BaseModel):
     """Base TikTok API response model."""
-    
+
     code: int
     msg: str
     processed_time: float
@@ -27,7 +27,7 @@ class TikTokAPIResponse(BaseModel):
 
 class HashtagInfo(BaseModel):
     """TikTok hashtag information model."""
-    
+
     id: str
     cha_name: str = Field(alias="cha_name")
     desc: str = ""
@@ -39,20 +39,20 @@ class HashtagInfo(BaseModel):
     is_strong_music: bool = False
     type: int = 0
     cover: str = ""
-    
+
     class Config:
         populate_by_name = True
-        
+
     @property
     def hashtag_name(self) -> str:
         """Get clean hashtag name."""
         return self.cha_name
-    
+
     @property
     def formatted_user_count(self) -> str:
         """Get formatted user count."""
         return format_count(self.user_count, "users")
-    
+
     @property
     def formatted_view_count(self) -> str:
         """Get formatted view count."""
@@ -61,7 +61,7 @@ class HashtagInfo(BaseModel):
 
 class UserInfo(BaseModel):
     """TikTok user information model."""
-    
+
     id: str
     unique_id: str
     nickname: str
@@ -76,7 +76,7 @@ class UserInfo(BaseModel):
 
 class MusicInfo(BaseModel):
     """TikTok music information model."""
-    
+
     id: str
     title: str
     play: str = ""
@@ -89,7 +89,7 @@ class MusicInfo(BaseModel):
 
 class VideoAuthor(BaseModel):
     """TikTok video author model."""
-    
+
     id: str
     unique_id: str
     nickname: str
@@ -98,7 +98,7 @@ class VideoAuthor(BaseModel):
 
 class VideoInfo(BaseModel):
     """TikTok video information model."""
-    
+
     aweme_id: str
     video_id: str
     region: str = ""
@@ -117,27 +117,27 @@ class VideoInfo(BaseModel):
     music_info: Optional[MusicInfo] = None
     author: Optional[VideoAuthor] = None
     is_top: int = 0
-    
+
     @property
     def formatted_play_count(self) -> str:
         """Get formatted play count."""
         return format_count(self.play_count, "plays")
-    
+
     @property
     def formatted_digg_count(self) -> str:
         """Get formatted like count."""
         return format_count(self.digg_count, "likes")
-    
+
     @property
     def formatted_comment_count(self) -> str:
         """Get formatted comment count."""
         return format_count(self.comment_count, "comments")
-    
+
     @property
     def formatted_share_count(self) -> str:
         """Get formatted share count."""
         return format_count(self.share_count, "shares")
-    
+
     @property
     def tiktok_url(self) -> str:
         """Get TikTok video URL."""
@@ -148,18 +148,18 @@ class VideoInfo(BaseModel):
 
 class HashtagPostsData(BaseModel):
     """TikTok hashtag posts data model."""
-    
+
     videos: List[VideoInfo] = []
     cursor: int = 0
     hasMore: bool = False
-    
+
     class Config:
         populate_by_name = True
 
 
 class HashtagPostsResponse(BaseModel):
     """TikTok hashtag posts response model."""
-    
+
     code: int
     msg: str
     processed_time: float
